@@ -54,7 +54,7 @@ public class MovementCreditCardServiceImpl implements MovementCreditCardService 
         LocalDate last = currentMonth.atEndOfMonth();
 
         return movementRepository.findByCreditAndDateBetween(credit, firstOfMonth, last)
-                .reduce(0.0,(x,y)-> x + y.getAmountSigned());
+                .reduce(0.0, (x, y) -> x + y.getAmountSigned());
 
     }
 
@@ -67,7 +67,7 @@ public class MovementCreditCardServiceImpl implements MovementCreditCardService 
     }
 
     @Override
-    public Mono<Double> getAverageDailyBalance(String credit) {
+    public Mono<Double> getAverageDailyBalance(final String credit) {
         int numDays = LocalDate.now().getDayOfMonth();
 
         Mono<Double> lastBalance = creditCardRepository.findById(credit)

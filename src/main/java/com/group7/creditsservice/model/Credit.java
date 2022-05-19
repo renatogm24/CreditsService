@@ -24,16 +24,17 @@ public class Credit {
     private double tcea;
     private double balance;
 
-    public boolean isMovementValid(String type, Double amount) {
+    public boolean isMovementValid(final String type, final Double amount) {
 
-        if (Objects.isNull(type) || Objects.isNull(amount))
-            throw new MovementCreationException("Type, Account and Amount are mandatory attributes");
+        if (Objects.isNull(type) || Objects.isNull(amount)) {
+            throw new MovementCreationException("Type and Amount are requires");
+        }
 
-        return !type.equalsIgnoreCase("withdraw") ||
-                balance >= amount;
+        return !type.equalsIgnoreCase("withdraw")
+                || balance >= amount;
     }
 
-    public void makeMovement(String type, Double amount) {
+    public void makeMovement(final String type, final Double amount) {
         if (type.equalsIgnoreCase("withdraw")) {
             balance -= amount;
         } else if (type.equalsIgnoreCase("deposit")) {

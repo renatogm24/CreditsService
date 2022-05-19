@@ -29,15 +29,15 @@ public class CreditCardServiceImpl implements CreditCardService {
     }
 
     @Override
-    public Mono<CreditCardResponse> getById(String id) {
+    public Mono<CreditCardResponse> getById(final String id) {
         return repository.findById(id)
-                .switchIfEmpty(Mono.error(new LoanNotFoundException("Not found credit card"+id)))
+                .switchIfEmpty(Mono.error(new LoanNotFoundException("Not found credit card" + id)))
                 .doOnError(ex -> log.error("Not found credit card", id, ex))
                 .map(CreditCardResponse::fromModel);
     }
 
     @Override
-    public Flux<CreditCardResponse> getAllCreditCardsByClient(String client) {
+    public Flux<CreditCardResponse> getAllCreditCardsByClient(final String client) {
         return repository.findCreditCardsByClient(client)
                 .map(CreditCardResponse::fromModel);
     }
@@ -47,18 +47,18 @@ public class CreditCardServiceImpl implements CreditCardService {
         return Mono.just(creditCardRequest)
                 .map(CreditCardRequest::toModel)
                 .flatMap(creditCardRequest1 -> webClientUtils.getClient(creditCardRequest1.getClient())
-                        .switchIfEmpty(Mono.error(new LoanNotFoundException("Client not found: " +creditCardRequest1.getClient())))
-                        .doOnError(ex -> log.error("Client not found" +creditCardRequest1.getClient()))
-                        .flatMap(res ->repository.save(creditCardRequest1))
+                        .switchIfEmpty(Mono.error(new LoanNotFoundException("Client not found: " + creditCardRequest1.getClient())))
+                        .doOnError(ex -> log.error("Client not found" + creditCardRequest1.getClient()))
+                        .flatMap(res -> repository.save(creditCardRequest1))
                 )
                 .map(CreditCardResponse::fromModel);
 
     }
 
     @Override
-    public Mono<CreditCardResponse> updateCreditCard(String id, Mono<CreditCardRequest> creditCardRequestMono) {
+    public Mono<CreditCardResponse> updateCreditCard(final String id, Mono<CreditCardRequest> creditCardRequestMono) {
         return repository.findById(id)
-                .switchIfEmpty(Mono.error(new LoanNotFoundException("Credit card not found with id: "+id)))
+                .switchIfEmpty(Mono.error(new LoanNotFoundException("Credit card not found with id: "+ id)))
                 .doOnError(ex -> log.error("Credit card not found with id: {}", id, ex))
                 .flatMap(creditCard -> creditCardRequestMono.map(CreditCardRequest::toModel))
                 .map(CreditCardResponse::fromModel)
@@ -66,11 +66,11 @@ public class CreditCardServiceImpl implements CreditCardService {
     }
 
     @Override
-    public Mono<Void> deleteCreditCard(String id) {
+    public Mono<Void> deleteCreditCard(final String id) {
         return repository.findById(id)
-                .switchIfEmpty(Mono.error(new LoanNotFoundException("Credit card not found with id: "+id)))
+                .switchIfEmpty(Mono.error(new LoanNotFoundException("Credit card not found with id: " + id)))
                 .doOnError(ex -> log.error("Credit card found with id: {}", id, ex))
                 .flatMap(existing -> repository.delete(existing))
-                        .doOnSuccess(ex->log.info("Delete credit card with id {}", id));
+                        .doOnSuccess(ex -> log.info("Delete credit card with id {}", id));
     }
 }
