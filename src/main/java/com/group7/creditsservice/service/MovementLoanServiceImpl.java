@@ -36,8 +36,8 @@ public class MovementLoanServiceImpl implements MovementLoanService {
     }
 
     @Override
-    public Flux<MovementLoan> getAllMovementsByLoan(String loan) {
-        return movementLoanRepository.findByLoan(loan);
+    public Flux<MovementResponse> getAllMovementsByLoan(String loan) {
+        return movementLoanRepository.findByLoan(loan).map(MovementResponse::fromModelMovementLoan);
     }
 
     @Override

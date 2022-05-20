@@ -11,7 +11,7 @@ public interface MovementLoanService {
 
     Mono<MovementLoan> getById(String id);
 
-    Flux<MovementLoan> getAllMovementsByLoan(String loan);
+    Flux<MovementResponse> getAllMovementsByLoan(String loan);
 
     Mono<Double> getStateByLoanPerMonthAndYear(String loan, int year, int month);
 

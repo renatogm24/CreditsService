@@ -43,7 +43,7 @@ public class MovementCreditCardServiceImpl implements MovementCreditCardService 
 
     @Override
     public Flux<MovementResponse> getAllMovementsByCredit(String credit) {
-        return movementRepository.findByCredit(credit);
+        return movementRepository.findByCredit(credit).map(MovementResponse::fromModelMovementCreditCard);
     }
 
     @Override
