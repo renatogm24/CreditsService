@@ -1,5 +1,4 @@
 package com.group7.creditsservice.repository;
-
 import com.group7.creditsservice.model.MovementLoan;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Flux;

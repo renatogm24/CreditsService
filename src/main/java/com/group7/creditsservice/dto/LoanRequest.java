@@ -25,7 +25,6 @@ public class LoanRequest {
     @NotNull
     private double amount;
 
-    @Positive
     @NotNull
     private double balance;
     @NotNull

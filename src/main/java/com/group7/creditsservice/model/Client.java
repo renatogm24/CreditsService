@@ -1,12 +1,15 @@
 package com.group7.creditsservice.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+
 public class Client {
     private String id;
     private String name;
