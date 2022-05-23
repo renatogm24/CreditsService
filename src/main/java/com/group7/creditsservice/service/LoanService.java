@@ -10,6 +10,8 @@ public interface LoanService {
 
     Flux<Loan> findAllLoans();
 
+    Flux<LoanResponse> getAllLoansByClient(String client);
+
     Mono<LoanResponse> saveLoan(Mono<LoanRequest> loanRequest);
 
     Mono<LoanResponse> update(String id, Mono<LoanRequest> loanRequest);

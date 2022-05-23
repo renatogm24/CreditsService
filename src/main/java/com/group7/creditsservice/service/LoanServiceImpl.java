@@ -23,6 +23,12 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
+    public Flux<LoanResponse> getAllLoansByClient(final String client) {
+        return repository.findLoansByClient(client)
+                .map(LoanResponse::fromModel);
+    }
+
+    @Override
     public Mono<LoanResponse> saveLoan(Mono<LoanRequest> loanRequest) {
         return loanRequest.map(LoanRequest::toModel)
                 .flatMap(repository::insert)

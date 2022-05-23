@@ -24,6 +24,11 @@ public class LoanController {
         return service.findAllLoans();
     }
 
+    @GetMapping("/client/{client}")
+    public Flux<LoanResponse> getAllLoansByClient(@PathVariable final String client) {
+        return service.getAllLoansByClient(client);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<LoanResponse> saveLoan(@Valid @RequestBody Mono<LoanRequest> loanRequest) {
