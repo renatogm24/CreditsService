@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -39,6 +40,7 @@ public class MovementRequest {
                 .credit(this.credit)
                 .amount(this.amount)
                 .date(LocalDate.now())
+                .createdAt(LocalDateTime.now())
                 .build();
 
     }
@@ -53,6 +55,7 @@ public class MovementRequest {
                 .loan(this.credit)
                 .amount(this.amount)
                 .date(LocalDate.now())
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 }

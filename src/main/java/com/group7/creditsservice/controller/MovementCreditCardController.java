@@ -31,6 +31,11 @@ public class MovementCreditCardController {
         return service.getAllMovementsByCredit(credit);
     }
 
+    @GetMapping("latest/{credit}")
+    public Flux<MovementResponse> getLastestMovementsByCredit(@PathVariable String credit) {
+        return service.getLatestMovementsByCredit(credit);
+    }
+
     @GetMapping("/product/{credit}/state/{year}/{month}")
     public Mono<Double> getStateByCreditPerMonthAndYear(@PathVariable String credit, @PathVariable int year, @PathVariable int month){
         return service.getStateByCreditPerMonthAndYear(credit, year, month);

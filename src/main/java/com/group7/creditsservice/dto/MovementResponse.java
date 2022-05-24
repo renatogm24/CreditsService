@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -19,6 +20,7 @@ public class MovementResponse {
     private String type;
     private Double amount;
     private LocalDate date;
+    private LocalDateTime createdAt;
     private String credit;
 
     public static MovementResponse fromModelMovementCreditCard(MovementCreditCard movementCreditCard) {
@@ -27,6 +29,7 @@ public class MovementResponse {
                 .type(movementCreditCard.getType())
                 .amount(movementCreditCard.getAmount())
                 .date(movementCreditCard.getDate())
+                .createdAt(movementCreditCard.getCreatedAt())
                 .credit(movementCreditCard.getCredit())
                 .build();
     }
@@ -37,6 +40,7 @@ public class MovementResponse {
                 .type(movementLoan.getType())
                 .amount(movementLoan.getAmount())
                 .date(movementLoan.getDate())
+                .createdAt(movementLoan.getCreatedAt())
                 .credit(movementLoan.getLoan())
                 .build();
     }

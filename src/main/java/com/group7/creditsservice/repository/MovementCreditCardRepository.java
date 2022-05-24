@@ -9,6 +9,8 @@ public interface MovementCreditCardRepository extends ReactiveMongoRepository<Mo
 
     Flux<MovementCreditCard> findByCredit(String account);
 
+    Flux<MovementCreditCard> findByCreditOrderByCreatedAtDesc(String account);
+
     Flux<MovementCreditCard> findByCreditAndDateBetween(String credit, LocalDate from, LocalDate to);
 
 }

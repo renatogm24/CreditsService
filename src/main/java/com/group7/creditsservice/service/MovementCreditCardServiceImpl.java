@@ -11,6 +11,7 @@ import com.group7.creditsservice.repository.MovementCreditCardRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.core.Local;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -44,6 +45,11 @@ public class MovementCreditCardServiceImpl implements MovementCreditCardService 
     @Override
     public Flux<MovementResponse> getAllMovementsByCredit(String credit) {
         return movementRepository.findByCredit(credit).map(MovementResponse::fromModelMovementCreditCard);
+    }
+
+    @Override
+    public Flux<MovementResponse> getLatestMovementsByCredit(String credit) {
+        return movementRepository.findByCreditOrderByCreatedAtDesc(credit).take(10).map(MovementResponse::fromModelMovementCreditCard);
     }
 
     @Override

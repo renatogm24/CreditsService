@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -21,6 +22,8 @@ public class Movement {
     @NonNull
     private Double amount;
     private LocalDate date;
+
+    private LocalDateTime createdAt;
 
     public Double getAmountSigned(){
         return type.equalsIgnoreCase("withdraw")?-1*amount:amount;

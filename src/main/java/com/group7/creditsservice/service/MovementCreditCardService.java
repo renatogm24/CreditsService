@@ -15,6 +15,7 @@ public interface MovementCreditCardService {
     Mono<MovementCreditCard> getById(String id);
 
     Flux<MovementResponse> getAllMovementsByCredit(String credit);
+    Flux<MovementResponse> getLatestMovementsByCredit(String credit);
 
     Mono<Double> getStateByCreditPerMonthAndYear(String credit, int year, int month);
     Mono<Double> getAverageDailyBalance(String credit);
