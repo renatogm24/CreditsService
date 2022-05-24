@@ -15,6 +15,7 @@ import java.time.LocalDate;
 public class BillingResponse {
     private String id;
     private String credit;
+    private String client;
     private LocalDate lastDayPayment;
     private LocalDate billingDate;
     private double minPayment;
@@ -25,6 +26,7 @@ public class BillingResponse {
         return BillingResponse.builder()
                 .id(billingCreditCard.getId())
                 .credit(billingCreditCard.getCredit())
+                .client(billingCreditCard.getClient())
                 .lastDayPayment(billingCreditCard.getLastDayPayment())
                 .billingDate(billingCreditCard.getBillingDate())
                 .minPayment(billingCreditCard.getMinPayment())

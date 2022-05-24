@@ -8,5 +8,7 @@ import reactor.core.publisher.Mono;
 public interface BillingCreditCardService {
 
     Flux<BillingResponse> getBillingByCredit(String credit);
+
+    Mono<Boolean> isDebt(String client);
     Mono<BillingResponse> save(BillingRequest billingRequest);
 }

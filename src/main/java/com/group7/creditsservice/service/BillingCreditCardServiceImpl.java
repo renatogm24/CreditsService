@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
+
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -23,6 +25,11 @@ public class BillingCreditCardServiceImpl implements BillingCreditCardService {
     @Override
     public Flux<BillingResponse> getBillingByCredit(String credit) {
         return billingCreditCardRepository.findByActiveIsTrue().map(BillingResponse::fromModelBillingCreditCard);
+    }
+
+    @Override
+    public Mono<Boolean> isDebt(String client) {
+        return billingCreditCardRepository.existsByClientAndMinPaymentGreaterThanAndLastDayPaymentLessThan(client, 0, LocalDate.now());
     }
 
     @Override
@@ -39,6 +46,7 @@ public class BillingCreditCardServiceImpl implements BillingCreditCardService {
                                             return Mono.error(new BillingCreationException("There is an activated billing date"));
                                         }
 
+                                        billingCreditCard.setClient(billingCreditCard1.getClient());
                                         return billingCreditCardRepository.save(billingCreditCard);
                                     });
                         }))

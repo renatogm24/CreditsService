@@ -18,6 +18,7 @@ public class Billing {
     private String id;
 
     private String credit;
+    private String client;
     private LocalDate lastDayPayment;
     private LocalDate billingDate;
     private boolean active;

@@ -3,8 +3,10 @@ package com.group7.creditsservice.controller;
 import com.group7.creditsservice.dto.CreditCardRequest;
 import com.group7.creditsservice.dto.CreditCardResponse;
 import com.group7.creditsservice.model.CreditCard;
+import com.group7.creditsservice.service.BillingCreditCardService;
 import com.group7.creditsservice.service.CreditCardService;
 import com.group7.creditsservice.service.MovementCreditCardService;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,8 @@ public class CreditCardController {
     private CreditCardService service;
     private MovementCreditCardService movementService;
 
+    private BillingCreditCardService billingCreditCardService;
+
     @GetMapping
     public Flux<CreditCard> getCreditCards() {
         return service.findAllCreditCars();
@@ -45,6 +49,11 @@ public class CreditCardController {
     @GetMapping("/client/{client}")
     public Flux<CreditCardResponse> getAllCreditCardsByClient(@PathVariable final String client) {
         return service.getAllCreditCardsByClient(client);
+    }
+
+    @GetMapping("/client/{client}/is_debt")
+    public Mono<Boolean> isDebtByClient(@PathVariable final String client) {
+        return billingCreditCardService.isDebt(client);
     }
 
     @GetMapping("/client/{client}/report_average_daily_balance")
