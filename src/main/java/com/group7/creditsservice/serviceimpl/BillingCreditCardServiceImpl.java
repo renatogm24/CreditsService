@@ -1,11 +1,11 @@
-package com.group7.creditsservice.service;
+package com.group7.creditsservice.serviceimpl;
 
 import com.group7.creditsservice.dto.BillingRequest;
 import com.group7.creditsservice.dto.BillingResponse;
-import com.group7.creditsservice.dto.MovementResponse;
 import com.group7.creditsservice.exception.billing.BillingCreationException;
 import com.group7.creditsservice.repository.BillingCreditCardRepository;
 import com.group7.creditsservice.repository.CreditCardRepository;
+import com.group7.creditsservice.service.BillingCreditCardService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class BillingCreditCardServiceImpl implements BillingCreditCardService {
 
     @Override
     public Flux<BillingResponse> getBillingByCredit(String credit) {
-        return billingCreditCardRepository.findByActiveIsTrue().map(BillingResponse::fromModelBillingCreditCard);
+        return billingCreditCardRepository.findByCredit(credit).map(BillingResponse::fromModelBillingCreditCard);
     }
 
     @Override
@@ -38,18 +38,28 @@ public class BillingCreditCardServiceImpl implements BillingCreditCardService {
                 .map(BillingRequest::toModelBillingCreditCard)
                 .flatMap(billingCreditCard -> creditCardRepository.findById(billingRequest.getCredit())
                         .switchIfEmpty(Mono.error(new BillingCreationException("Credit card not found with id: "+billingCreditCard.getCredit())))
-                        .flatMap(billingCreditCard1 -> {
-                            return billingCreditCardRepository.findByActiveIsTrue()
-                                    .hasElements()
-                                    .flatMap(hasElement -> {
-                                        if (hasElement) {
-                                            return Mono.error(new BillingCreationException("There is an activated billing date"));
-                                        }
+                        .flatMap(billingCreditCard1 -> billingCreditCardRepository.findByCreditAndActiveIsTrue(billingCreditCard.getCredit())
+                            .hasElement()
+                            .flatMap(hasElement -> {
+                                if (hasElement) {
+                                    return Mono.error(new BillingCreationException("There is an activated billing date"));
+                                }
 
-                                        billingCreditCard.setClient(billingCreditCard1.getClient());
-                                        return billingCreditCardRepository.save(billingCreditCard);
-                                    });
-                        }))
+                                billingCreditCard.setClient(billingCreditCard1.getClient());
+                                return billingCreditCardRepository.save(billingCreditCard);
+                            })
+                        ))
+                .map(BillingResponse::fromModelBillingCreditCard);
+    }
+
+    @Override
+    public Mono<BillingResponse> disableBilling(String id) {
+        return billingCreditCardRepository.findById(id)
+                .switchIfEmpty(Mono.error(new BillingCreationException("Billing credit card not found with id: "+id)))
+                .flatMap(billingCreditCard -> {
+                    billingCreditCard.setActive(false);
+                    return billingCreditCardRepository.save(billingCreditCard);
+                })
                 .map(BillingResponse::fromModelBillingCreditCard);
     }
 }

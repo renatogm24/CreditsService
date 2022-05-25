@@ -1,13 +1,17 @@
-package com.group7.creditsservice.service;
+package com.group7.creditsservice.serviceimpl;
 
+import com.group7.creditsservice.dto.BillingResponse;
 import com.group7.creditsservice.dto.MovementRequest;
 import com.group7.creditsservice.dto.MovementResponse;
+import com.group7.creditsservice.model.BillingCreditCard;
 import com.group7.creditsservice.model.Credit;
 import com.group7.creditsservice.model.CreditCard;
 import com.group7.creditsservice.model.MovementCreditCard;
 import com.group7.creditsservice.exception.movement.MovementCreationException;
+import com.group7.creditsservice.repository.BillingCreditCardRepository;
 import com.group7.creditsservice.repository.CreditCardRepository;
 import com.group7.creditsservice.repository.MovementCreditCardRepository;
+import com.group7.creditsservice.service.MovementCreditCardService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.core.Local;
@@ -30,6 +34,8 @@ public class MovementCreditCardServiceImpl implements MovementCreditCardService 
     private MovementCreditCardRepository movementRepository;
 
     private CreditCardRepository creditCardRepository;
+
+    private BillingCreditCardRepository billingCreditCardRepository;
 
     @Override
     public Flux<MovementCreditCard> getAll() {
@@ -114,9 +120,23 @@ public class MovementCreditCardServiceImpl implements MovementCreditCardService 
                             if (!existingCredit.isMovementValid(movement.getType(), movement.getAmount()))
                                 return Mono.error(new MovementCreationException("You reach the limit of your credit card"));
                             existingCredit.makeMovement(movement.getType(), movement.getAmount());
+
                             return creditCardRepository.save(existingCredit)
                                     .then(movementRepository.insert(movement));
-                        }))
+
+                        })
+                        .flatMap(movement2 -> billingCreditCardRepository.findByCreditAndActiveIsTrue(movement2.getCredit())
+                                .flatMap(billingCreditCard -> {
+                                    if(movement2.getType().equalsIgnoreCase("withdraw")) {
+                                        billingCreditCard.updatePayment(movement2.getAmount());
+                                        return billingCreditCardRepository.save(billingCreditCard);
+                                    }
+
+                                    return Mono.just(movement2);
+                                })
+                                .then(movementRepository.findById(movement.getId()))
+
+                ))
                 .map(MovementResponse::fromModelMovementCreditCard)
                 .onErrorMap(ex -> new MovementCreationException(ex.getMessage()));
     }

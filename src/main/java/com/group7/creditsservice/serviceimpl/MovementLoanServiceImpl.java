@@ -1,4 +1,4 @@
-package com.group7.creditsservice.service;
+package com.group7.creditsservice.serviceimpl;
 
 import com.group7.creditsservice.dto.MovementRequest;
 import com.group7.creditsservice.dto.MovementResponse;
@@ -6,6 +6,7 @@ import com.group7.creditsservice.model.MovementLoan;
 import com.group7.creditsservice.exception.movement.MovementCreationException;
 import com.group7.creditsservice.repository.LoanRepository;
 import com.group7.creditsservice.repository.MovementLoanRepository;
+import com.group7.creditsservice.service.MovementLoanService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

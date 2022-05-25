@@ -2,8 +2,6 @@ package com.group7.creditsservice.controller;
 
 import com.group7.creditsservice.dto.BillingRequest;
 import com.group7.creditsservice.dto.BillingResponse;
-import com.group7.creditsservice.dto.MovementResponse;
-import com.group7.creditsservice.repository.BillingCreditCardRepository;
 import com.group7.creditsservice.service.BillingCreditCardService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +22,11 @@ public class BillingCreditCardController {
     @GetMapping("{credit}")
     public Flux<BillingResponse> getAllBillingByCredit(@PathVariable String credit) {
         return service.getBillingByCredit(credit);
+    }
+
+    @PutMapping("{id}/disable")
+    public Mono<BillingResponse> disableBilling(@PathVariable String id) {
+        return service.disableBilling(id);
     }
 
     @PostMapping

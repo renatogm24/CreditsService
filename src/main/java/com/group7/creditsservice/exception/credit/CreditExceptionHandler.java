@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class CreditExceptionHandler {
     @ExceptionHandler(CreditCreationException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionResponse handleLoanNotFoundException(CreditCreationException ex) {
+    public ExceptionResponse handleCreditNotFoundException(CreditCreationException ex) {
         return ExceptionResponse.builder().message(ex.getMessage()).build();
     }
 
     @ExceptionHandler(CreditCreationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse handleLoanCreationException(CreditCreationException ex) {
+    public ExceptionResponse handleCreditCreationException(CreditCreationException ex) {
         return ExceptionResponse.builder().message(ex.getMessage()).build();
     }
 }

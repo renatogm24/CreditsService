@@ -1,10 +1,11 @@
-package com.group7.creditsservice.service;
+package com.group7.creditsservice.serviceimpl;
 
 import com.group7.creditsservice.dto.LoanRequest;
 import com.group7.creditsservice.dto.LoanResponse;
 import com.group7.creditsservice.exception.credit.CreditNotFoundException;
 import com.group7.creditsservice.model.Loan;
 import com.group7.creditsservice.repository.LoanRepository;
+import com.group7.creditsservice.service.LoanService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

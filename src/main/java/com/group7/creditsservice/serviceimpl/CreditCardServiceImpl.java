@@ -1,4 +1,4 @@
-package com.group7.creditsservice.service;
+package com.group7.creditsservice.serviceimpl;
 
 import com.group7.creditsservice.dto.*;
 import com.group7.creditsservice.exception.credit.CreditNotFoundException;
@@ -6,6 +6,7 @@ import com.group7.creditsservice.model.CreditCard;
 import com.group7.creditsservice.repository.BillingCreditCardRepository;
 import com.group7.creditsservice.repository.CreditCardRepository;
 import com.group7.creditsservice.repository.MovementCreditCardRepository;
+import com.group7.creditsservice.service.CreditCardService;
 import com.group7.creditsservice.utils.WebClientUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ public class CreditCardServiceImpl implements CreditCardService {
     public Mono<CreditCardResponse> getById(final String id) {
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new CreditNotFoundException("Not found credit card" + id)))
-                .doOnError(ex -> log.error("Not found credit card", id, ex))
+                .doOnError(ex -> log.error("Not found credit card {}", id, ex))
                 .map(CreditCardResponse::fromModel);
     }
 
@@ -52,8 +53,8 @@ public class CreditCardServiceImpl implements CreditCardService {
     @Override
     public Mono<CreditReportResponse> getReport(String id, LocalDate from, LocalDate to) {
         return repository.findById(id)
-                .switchIfEmpty(Mono.error(new CreditNotFoundException("Not found credit card"+id)))
-                .doOnError(ex -> log.error("Not found credit card", id, ex))
+                .switchIfEmpty(Mono.error(new CreditNotFoundException("Not found credit card "+id)))
+                .doOnError(ex -> log.error("Not found credit card {}", id, ex))
                 .flatMap(creditCard -> {
                     CreditReportResponse report = CreditReportResponse.fromModel(creditCard);
 

@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "loanBillings")
 public class BillingLoan extends Billing {
     private double payment;
-    private int installment_number;
+    private int installmentNumber;
 
     public void updatePayment(final Double payment) {
         this.payment -= payment;

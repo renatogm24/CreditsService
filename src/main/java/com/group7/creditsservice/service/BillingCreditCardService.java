@@ -11,4 +11,6 @@ public interface BillingCreditCardService {
 
     Mono<Boolean> isDebt(String client);
     Mono<BillingResponse> save(BillingRequest billingRequest);
+
+    Mono<BillingResponse> disableBilling(String id);
 }
