@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 public interface CreditCardService {
 
-    Flux<CreditCard> findAllCreditCars();
+    Flux<CreditCardResponse> findAllCreditCars();
 
     Mono<CreditCardResponse> getById(String id);
 
@@ -21,7 +21,7 @@ public interface CreditCardService {
 
     Mono<CreditCardResponse> saveCreditCard(CreditCardRequest creditCardRequestMono);
 
-    Mono<CreditCardResponse> updateCreditCard(String id, Mono<CreditCardRequest> creditCardRequestMono);
+    Mono<CreditCardResponse> updateCreditCard(String id, CreditCardRequest creditCardRequest);
 
     Mono<Void> deleteCreditCard(String id);
 }

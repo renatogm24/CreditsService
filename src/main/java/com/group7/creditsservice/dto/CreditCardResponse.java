@@ -18,6 +18,7 @@ public class CreditCardResponse {
     private double balance;
     private String number;
     private int billingDay;
+    private double tcea;
 
     public static CreditCardResponse fromModel(CreditCard creditCard) {
         CreditCardResponseBuilder response = CreditCardResponse.builder()
@@ -26,7 +27,8 @@ public class CreditCardResponse {
                 .amount(creditCard.getAmount())
                 .balance(creditCard.getBalance())
                 .number(creditCard.getNumber())
-                .billingDay(creditCard.getBillingDay());
+                .billingDay(creditCard.getBillingDay())
+                .tcea(creditCard.getTcea());
 
         return response.build();
     }

@@ -22,7 +22,7 @@ public class MovementCreditCardController {
     private MovementCreditCardService service;
 
     @GetMapping
-    public Flux<MovementCreditCard> getAllMovements(){
+    public Flux<MovementResponse> getAllMovements(){
         return service.getAll();
     }
 
@@ -42,7 +42,7 @@ public class MovementCreditCardController {
     }
 
     @GetMapping("{id}")
-    public Mono<MovementCreditCard> getMovement(@PathVariable String id){
+    public Mono<MovementResponse> getMovement(@PathVariable String id){
         return service.getById(id);
     }
 

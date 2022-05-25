@@ -10,9 +10,9 @@ import java.util.Map;
 
 public interface MovementCreditCardService {
 
-    Flux<MovementCreditCard> getAll();
+    Flux<MovementResponse> getAll();
 
-    Mono<MovementCreditCard> getById(String id);
+    Mono<MovementResponse> getById(String id);
 
     Flux<MovementResponse> getAllMovementsByCredit(String credit);
     Flux<MovementResponse> getLatestMovementsByCredit(String credit);

@@ -16,5 +16,5 @@ public class Client {
     private String type;
     private String profile;
     private String documentType;
-    private Long documentNumber;
+    private String documentNumber;
 }

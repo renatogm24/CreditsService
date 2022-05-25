@@ -40,6 +40,10 @@ public class CreditCardRequest {
     @NotNull
     private double amount;
 
+    @Min(value = 0)
+    @Max(value = 100)
+    private double tcea;
+
     public CreditCard toModel() {
         return CreditCard.builder()
                 .client(this.client)
@@ -47,7 +51,8 @@ public class CreditCardRequest {
                 .paymentDay(this.paymentDay)
                 .billingDay(this.billingDay)
                 .amount(this.amount)
-                .balance(0)
+                .balance(this.amount)
+                .tcea(this.tcea)
                 .build();
     }
 }

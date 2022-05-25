@@ -37,7 +37,7 @@ public class CreditCardController {
     private BillingCreditCardService billingCreditCardService;
 
     @GetMapping
-    public Flux<CreditCard> getCreditCards() {
+    public Flux<CreditCardResponse> getCreditCards() {
         return service.findAllCreditCars();
     }
 
@@ -84,8 +84,8 @@ public class CreditCardController {
     }
 
     @PutMapping("{id}")
-    public Mono<CreditCardResponse> updateCreditCard(@PathVariable String id, @Valid @RequestBody Mono<CreditCardRequest> creditCardRequestMono) {
-        return service.updateCreditCard(id, creditCardRequestMono);
+    public Mono<CreditCardResponse> updateCreditCard(@PathVariable String id, @Valid @RequestBody CreditCardRequest creditCardRequest) {
+        return service.updateCreditCard(id, creditCardRequest);
     }
 
     @DeleteMapping("{id}")

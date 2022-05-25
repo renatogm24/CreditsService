@@ -49,7 +49,8 @@ public class BillingCreditCardServiceImpl implements BillingCreditCardService {
                                 return billingCreditCardRepository.save(billingCreditCard);
                             })
                         ))
-                .map(BillingResponse::fromModelBillingCreditCard);
+                .map(BillingResponse::fromModelBillingCreditCard)
+                .onErrorMap(ex -> new BillingCreationException(ex.getMessage()));
     }
 
     @Override

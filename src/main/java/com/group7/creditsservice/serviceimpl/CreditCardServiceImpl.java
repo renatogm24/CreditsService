@@ -32,8 +32,8 @@ public class CreditCardServiceImpl implements CreditCardService {
     private WebClientUtils webClientUtils;
 
     @Override
-    public Flux<CreditCard> findAllCreditCars() {
-        return repository.findAll().switchIfEmpty(Flux.empty());
+    public Flux<CreditCardResponse> findAllCreditCars() {
+        return repository.findAll().map(CreditCardResponse::fromModel);
     }
 
     @Override
@@ -90,11 +90,15 @@ public class CreditCardServiceImpl implements CreditCardService {
     }
 
     @Override
-    public Mono<CreditCardResponse> updateCreditCard(final String id, Mono<CreditCardRequest> creditCardRequestMono) {
+    public Mono<CreditCardResponse> updateCreditCard(final String id, CreditCardRequest creditCardRequest) {
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new CreditNotFoundException("Credit card not found with id: "+ id)))
                 .doOnError(ex -> log.error("Credit card not found with id: {}", id, ex))
-                .flatMap(creditCard -> creditCardRequestMono.map(CreditCardRequest::toModel))
+                .flatMap(creditCard -> {
+                    creditCard.setPaymentDay(creditCardRequest.getPaymentDay());
+                    creditCard.setBillingDay(creditCardRequest.getBillingDay());
+                    return repository.save(creditCard);
+                })
                 .map(CreditCardResponse::fromModel)
                 .doOnSuccess(res -> log.info("Updated credit card with id", res.getId()));
     }

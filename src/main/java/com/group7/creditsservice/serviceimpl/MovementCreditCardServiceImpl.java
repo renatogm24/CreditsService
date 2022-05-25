@@ -1,10 +1,7 @@
 package com.group7.creditsservice.serviceimpl;
 
-import com.group7.creditsservice.dto.BillingResponse;
 import com.group7.creditsservice.dto.MovementRequest;
 import com.group7.creditsservice.dto.MovementResponse;
-import com.group7.creditsservice.model.BillingCreditCard;
-import com.group7.creditsservice.model.Credit;
 import com.group7.creditsservice.model.CreditCard;
 import com.group7.creditsservice.model.MovementCreditCard;
 import com.group7.creditsservice.exception.movement.MovementCreationException;
@@ -14,8 +11,6 @@ import com.group7.creditsservice.repository.MovementCreditCardRepository;
 import com.group7.creditsservice.service.MovementCreditCardService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cglib.core.Local;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,9 +18,7 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Map;
-import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
@@ -38,14 +31,16 @@ public class MovementCreditCardServiceImpl implements MovementCreditCardService 
     private BillingCreditCardRepository billingCreditCardRepository;
 
     @Override
-    public Flux<MovementCreditCard> getAll() {
-        return movementRepository.findAll();
+    public Flux<MovementResponse> getAll() {
+        return movementRepository.findAll().map(MovementResponse::fromModelMovementCreditCard);
     }
 
     @Override
-    public Mono<MovementCreditCard> getById(String id) {
+    public Mono<MovementResponse> getById(String id) {
         return movementRepository.findById(id)
-                .switchIfEmpty(Mono.error(new MovementCreationException("Movement not found with id: " + id)));
+                .switchIfEmpty(Mono.error(new MovementCreationException("Movement not found with id: " + id)))
+                .doOnError(ex -> log.error("Not found credit card {}", id, ex))
+                .map(MovementResponse::fromModelMovementCreditCard);
     }
 
     @Override
@@ -127,18 +122,19 @@ public class MovementCreditCardServiceImpl implements MovementCreditCardService 
                         })
                         .flatMap(movement2 -> billingCreditCardRepository.findByCreditAndActiveIsTrue(movement2.getCredit())
                                 .flatMap(billingCreditCard -> {
-                                    if(movement2.getType().equalsIgnoreCase("withdraw")) {
+                                    if(movement2.getType().equalsIgnoreCase("deposit")) {
                                         billingCreditCard.updatePayment(movement2.getAmount());
                                         return billingCreditCardRepository.save(billingCreditCard);
                                     }
 
                                     return Mono.just(movement2);
                                 })
-                                .then(movementRepository.findById(movement.getId()))
+                                .then(movementRepository.findById(movement.getId())))
 
-                ))
+                )
                 .map(MovementResponse::fromModelMovementCreditCard)
-                .onErrorMap(ex -> new MovementCreationException(ex.getMessage()));
+                .onErrorMap(ex -> new MovementCreationException(ex.getMessage()))
+                .doOnError(ex -> log.error("Error save", ex));
     }
 
     @Override
