@@ -28,7 +28,7 @@ public class CreditReportResponse {
         return CreditReportResponse.builder()
                 .id(creditCard.getId())
                 .client(creditCard.getClient())
-                .amount(creditCard.getBalance())
+                .amount(creditCard.getAmount())
                 .balance(creditCard.getBalance())
                 .number(creditCard.getNumber())
                 .billingDay(creditCard.getBillingDay())

@@ -26,8 +26,6 @@ public class LoanRequest {
     private double amount;
 
     @NotNull
-    private double balance;
-    @NotNull
     @Min(value = 1)
     @Max(value = 25)
     private int paymentDay;
@@ -42,7 +40,7 @@ public class LoanRequest {
         return Loan.builder()
                 .client(this.client)
                 .amount(this.amount)
-                .balance(this.balance)
+                .balance(0)
                 .paymentDay(this.paymentDay)
                 .fullPayment(this.fullPayments)
                 .numberInstallments(this.numberInstallments)

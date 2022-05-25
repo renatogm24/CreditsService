@@ -40,10 +40,6 @@ public class CreditCardRequest {
     @NotNull
     private double amount;
 
-    @Positive
-    @NotNull
-    private double balance;
-
     public CreditCard toModel() {
         return CreditCard.builder()
                 .client(this.client)
@@ -51,7 +47,7 @@ public class CreditCardRequest {
                 .paymentDay(this.paymentDay)
                 .billingDay(this.billingDay)
                 .amount(this.amount)
-                .balance(this.balance)
+                .balance(0)
                 .build();
     }
 }
