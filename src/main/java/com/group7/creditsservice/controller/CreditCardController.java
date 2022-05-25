@@ -2,11 +2,11 @@ package com.group7.creditsservice.controller;
 
 import com.group7.creditsservice.dto.CreditCardRequest;
 import com.group7.creditsservice.dto.CreditCardResponse;
+import com.group7.creditsservice.dto.CreditReportResponse;
 import com.group7.creditsservice.model.CreditCard;
 import com.group7.creditsservice.service.BillingCreditCardService;
 import com.group7.creditsservice.service.CreditCardService;
 import com.group7.creditsservice.service.MovementCreditCardService;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,6 +23,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Map;
 
 @RestController
@@ -54,6 +55,20 @@ public class CreditCardController {
     @GetMapping("/client/{client}/is_debt")
     public Mono<Boolean> isDebtByClient(@PathVariable final String client) {
         return billingCreditCardService.isDebt(client);
+    }
+
+    @GetMapping("{id}/report/from/{yearFrom}/{monthFrom}/{dayFrom}/to/{yearTo}/{monthTo}/{dayTo}")
+    public Mono<CreditReportResponse> getReportByAccountAndPeriod(@PathVariable final String id,
+                                                                   @PathVariable final Integer yearFrom,
+                                                                   @PathVariable final Integer monthFrom,
+                                                                   @PathVariable final Integer dayFrom,
+                                                                   @PathVariable final Integer yearTo,
+                                                                   @PathVariable final Integer monthTo,
+                                                                   @PathVariable final Integer dayTo) {
+
+        LocalDate from = LocalDate.of(yearFrom, monthFrom, dayFrom);
+        LocalDate to = LocalDate.of(yearTo, monthTo, dayTo);
+        return service.getReport(id, from, to);
     }
 
     @GetMapping("/client/{client}/report_average_daily_balance")

@@ -2,7 +2,7 @@ package com.group7.creditsservice.service;
 
 import com.group7.creditsservice.dto.LoanRequest;
 import com.group7.creditsservice.dto.LoanResponse;
-import com.group7.creditsservice.exception.loan.LoanNotFoundException;
+import com.group7.creditsservice.exception.credit.CreditNotFoundException;
 import com.group7.creditsservice.model.Loan;
 import com.group7.creditsservice.repository.LoanRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +38,7 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public Mono<LoanResponse> update(String id, Mono<LoanRequest> loanRequest) {
         return repository.findById(id)
-                .switchIfEmpty(Mono.error(new LoanNotFoundException("Loan not found with id:"+id)))
+                .switchIfEmpty(Mono.error(new CreditNotFoundException("Loan not found with id:"+id)))
                 .doOnError(ex -> log.error("Loan not found with id: {}", id, ex))
                 .flatMap(loan -> loanRequest.map(LoanRequest::toModel))
                 .map(LoanResponse::fromModel)
@@ -48,7 +48,7 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public Mono<Void> delete(String id) {
         return repository.findById(id)
-                .switchIfEmpty(Mono.error(new LoanNotFoundException("Loan not found with id:"+id)))
+                .switchIfEmpty(Mono.error(new CreditNotFoundException("Loan not found with id:"+id)))
                 .doOnError(ex->log.error("Loan not found with id: {}", id, ex))
                 .flatMap(existingLoan -> repository.delete(existingLoan)
                         ).doOnSuccess(ex ->log.info("Delete loan with id: {}", id));
