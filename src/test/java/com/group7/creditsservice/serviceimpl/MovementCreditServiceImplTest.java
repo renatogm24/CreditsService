@@ -25,7 +25,7 @@ import java.time.YearMonth;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-public class MovementCreditServiceImplTest {
+class MovementCreditServiceImplTest {
     private static final String MOVEMENT_CREDIT_CARD_ID = "628ea1dd628a580f7d446e9e";
     private static final String CREDIT_CARD_ID = "628ea0f3628a580f7d446e9d";
     private static final String MOVEMENT_CREDIT_CARD_TYPE = "withdraw";
@@ -44,7 +44,6 @@ public class MovementCreditServiceImplTest {
     private static final LocalDate BILLING_CREDIT_CARD_BILLING_DATE =  LocalDate.of(2022, 5, 10);
     private static final Double BILLING_CREDIT_CARD_MIN_PAYMENT = 95.0;
     private static final Double BILLING_CREDIT_CARD_FULL_PAYMENT = 950.0;
-
 
 
     @Mock

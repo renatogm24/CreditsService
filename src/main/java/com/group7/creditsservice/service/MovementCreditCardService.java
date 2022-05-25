@@ -1,6 +1,5 @@
 package com.group7.creditsservice.service;
 
-import com.group7.creditsservice.dto.MovementRequest;
 import com.group7.creditsservice.dto.MovementResponse;
 import com.group7.creditsservice.model.MovementCreditCard;
 import reactor.core.publisher.Flux;
@@ -22,7 +21,7 @@ public interface MovementCreditCardService {
 
     Flux<Map<String, Double>> getAllReportsByClient(String client);
 
-    Mono<MovementResponse> save(MovementRequest movementRequest);
+    Mono<MovementResponse> save(MovementCreditCard movementRequest);
 
     Mono<Void> delete(String id);
 

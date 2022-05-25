@@ -2,7 +2,6 @@ package com.group7.creditsservice.controller;
 
 import com.group7.creditsservice.dto.MovementRequest;
 import com.group7.creditsservice.dto.MovementResponse;
-import com.group7.creditsservice.model.MovementCreditCard;
 import com.group7.creditsservice.service.MovementCreditCardService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +48,7 @@ public class MovementCreditCardController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<MovementResponse> saveMovement(@Valid @RequestBody MovementRequest movementRequest){
-        return service.save(movementRequest);
+        return service.save(movementRequest.toModelMovementCreditCard());
     }
 
     @DeleteMapping("{id}")

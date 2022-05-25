@@ -1,9 +1,6 @@
 package com.group7.creditsservice.controller;
 
-import com.group7.creditsservice.dto.CreditCardRequest;
-import com.group7.creditsservice.dto.CreditCardResponse;
-import com.group7.creditsservice.dto.CreditReportResponse;
-import com.group7.creditsservice.model.CreditCard;
+import com.group7.creditsservice.dto.*;
 import com.group7.creditsservice.service.BillingCreditCardService;
 import com.group7.creditsservice.service.CreditCardService;
 import com.group7.creditsservice.service.MovementCreditCardService;
@@ -81,6 +78,13 @@ public class CreditCardController {
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<CreditCardResponse> saveCreditCard(@Valid @RequestBody CreditCardRequest creditCardRequestMono) {
         return service.saveCreditCard(creditCardRequestMono);
+    }
+
+    @PostMapping("/payment")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<MovementResponse> payment(@Valid @RequestBody PaymentRequest paymentRequest){
+
+        return movementService.save(paymentRequest.toModelMovementCreditCard());
     }
 
     @PutMapping("{id}")

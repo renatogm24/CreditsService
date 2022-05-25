@@ -105,10 +105,11 @@ public class MovementCreditCardServiceImpl implements MovementCreditCardService 
     }
 
 
+
+
     @Override
-    public Mono<MovementResponse> save(MovementRequest movementRequest) {
+    public Mono<MovementResponse> save(MovementCreditCard movementRequest) {
         return Mono.just(movementRequest)
-                .map(MovementRequest::toModelMovementCreditCard)
                 .flatMap(movement -> creditCardRepository.findById(movement.getCredit())
                         .switchIfEmpty(Mono.error(new MovementCreationException("Account not found with id: " + movement.getCredit())))
                         .flatMap(existingCredit -> {

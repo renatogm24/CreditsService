@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 
-public class BillingCreditCardServiceImplTest {
+class BillingCreditCardServiceImplTest {
     private static final String CREDIT_CARD_ID = "62784dd906dc7f2ed86d12d5";
     private static final String BILLING_CREDIT_CARD_ID = "628dcd1977d2b639fd72b9f5";
     private static final LocalDate BILLING_CREDIT_CARD_LAST_PAYMENT_DAY = LocalDate.of(2022, 5, 25) ;

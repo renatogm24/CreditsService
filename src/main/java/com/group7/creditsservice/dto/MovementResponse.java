@@ -22,6 +22,7 @@ public class MovementResponse {
     private LocalDate date;
     private LocalDateTime createdAt;
     private String credit;
+    private String clientPaying;
 
     public static MovementResponse fromModelMovementCreditCard(MovementCreditCard movementCreditCard) {
         return MovementResponse.builder()
@@ -31,6 +32,7 @@ public class MovementResponse {
                 .date(movementCreditCard.getDate())
                 .createdAt(movementCreditCard.getCreatedAt())
                 .credit(movementCreditCard.getCredit())
+                .clientPaying(movementCreditCard.getClientPaying())
                 .build();
     }
 
@@ -42,6 +44,7 @@ public class MovementResponse {
                 .date(movementLoan.getDate())
                 .createdAt(movementLoan.getCreatedAt())
                 .credit(movementLoan.getLoan())
+                .clientPaying(movementLoan.getClientPaying())
                 .build();
     }
 }

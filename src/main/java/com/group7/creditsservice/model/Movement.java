@@ -22,8 +22,9 @@ public class Movement {
     @NonNull
     private Double amount;
     private LocalDate date;
-
     private LocalDateTime createdAt;
+
+    private String clientPaying;
 
     public Double getAmountSigned(){
         return type.equalsIgnoreCase("withdraw")?-1*amount:amount;

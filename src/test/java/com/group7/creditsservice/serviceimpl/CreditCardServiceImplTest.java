@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 
-public class CreditCardServiceImplTest {
+class CreditCardServiceImplTest {
     private static final String CREDIT_CARD_ID = "628dd0ef97545d60564b93f5";
     private static final String CREDIT_CARD_CLIENT = "62784dd906dc7f2ed86d12d5";
     private static final Double CREDIT_CARD_AMOUNT = 1000.0;
