@@ -39,18 +39,8 @@ class MovementCreditServiceImplTest {
     private static final Double CREDIT_CARD_BALANCE = 1000.0;
     private static final Double CREDIT_CARD_TCEA = 10.5;
 
-    private static final String BILLING_CREDIT_CARD_ID = "628dcd1977d2b639fd72b9f5";
-    private static final LocalDate BILLING_CREDIT_CARD_LAST_PAYMENT_DAY = LocalDate.of(2022, 5, 25) ;
-    private static final LocalDate BILLING_CREDIT_CARD_BILLING_DATE =  LocalDate.of(2022, 5, 10);
-    private static final Double BILLING_CREDIT_CARD_MIN_PAYMENT = 95.0;
-    private static final Double BILLING_CREDIT_CARD_FULL_PAYMENT = 950.0;
-
-
     @Mock
     private CreditCardRepository creditCardRepository;
-
-    @Mock
-    private BillingCreditCardRepository billingCreditCardRepository;
 
     @Mock
     private MovementCreditCardRepository movementCreditCardRepository;
@@ -121,6 +111,25 @@ class MovementCreditServiceImplTest {
     }
 
     @Test
+    void getLatestMovementsByCredit() {
+        MovementCreditCard movementCreditCard = MovementCreditCard.builder()
+                .id(MOVEMENT_CREDIT_CARD_ID)
+                .type(MOVEMENT_CREDIT_CARD_TYPE)
+                .credit(CREDIT_CARD_ID)
+                .amount(MOVEMENT_CREDIT_CARD_AMOUNT)
+                .date(LocalDate.now())
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        when(movementCreditCardRepository.findByCreditOrderByCreatedAtDesc(CREDIT_CARD_ID))
+                .thenReturn(Flux.just(movementCreditCard).take(10));
+
+        StepVerifier.create(movementCreditCardService.getLatestMovementsByCredit(CREDIT_CARD_ID))
+                .expectNext(MovementResponse.fromModelMovementCreditCard(movementCreditCard))
+                .verifyComplete();
+    }
+
+    @Test
     void getAverageDailyBalance() {
         YearMonth currentMonth = YearMonth.now();
         LocalDate firstOfMonth = currentMonth.atDay(1);
@@ -158,7 +167,7 @@ class MovementCreditServiceImplTest {
     }
 
     @Test
-    void getAllReportByClient() {
+    void getAllReportsByClient() {
 
         YearMonth currentMonth = YearMonth.now();
         LocalDate firstOfMonth = currentMonth.atDay(1);

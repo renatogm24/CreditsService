@@ -3,7 +3,6 @@ package com.group7.creditsservice.serviceimpl;
 import com.group7.creditsservice.dto.CreditCardRequest;
 import com.group7.creditsservice.dto.CreditCardResponse;
 import com.group7.creditsservice.dto.CreditReportResponse;
-import com.group7.creditsservice.exception.credit.CreditCreationException;
 import com.group7.creditsservice.exception.credit.CreditNotFoundException;
 import com.group7.creditsservice.model.Client;
 import com.group7.creditsservice.model.CreditCard;

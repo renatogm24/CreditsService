@@ -39,7 +39,6 @@ public class MovementCreditCardServiceImpl implements MovementCreditCardService 
     public Mono<MovementResponse> getById(String id) {
         return movementRepository.findById(id)
                 .switchIfEmpty(Mono.error(new MovementCreationException("Movement not found with id: " + id)))
-                .doOnError(ex -> log.error("Not found credit card {}", id, ex))
                 .map(MovementResponse::fromModelMovementCreditCard);
     }
 
@@ -50,7 +49,7 @@ public class MovementCreditCardServiceImpl implements MovementCreditCardService 
 
     @Override
     public Flux<MovementResponse> getLatestMovementsByCredit(String credit) {
-        return movementRepository.findByCreditOrderByCreatedAtDesc(credit).take(10).map(MovementResponse::fromModelMovementCreditCard);
+        return movementRepository.findByCreditOrderByCreatedAtDesc(credit).map(MovementResponse::fromModelMovementCreditCard).take(10);
     }
 
     @Override
@@ -103,9 +102,6 @@ public class MovementCreditCardServiceImpl implements MovementCreditCardService 
                 .flatMap(creditCard -> getAverageDailyBalance(creditCard.getId())
                         .map(result -> Collections.singletonMap(creditCard.getId(), result)));
     }
-
-
-
 
     @Override
     public Mono<MovementResponse> save(MovementCreditCard movementRequest) {

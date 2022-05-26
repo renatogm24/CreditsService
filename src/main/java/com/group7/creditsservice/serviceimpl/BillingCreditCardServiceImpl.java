@@ -50,7 +50,8 @@ public class BillingCreditCardServiceImpl implements BillingCreditCardService {
                             })
                         ))
                 .map(BillingResponse::fromModelBillingCreditCard)
-                .onErrorMap(ex -> new BillingCreationException(ex.getMessage()));
+                .onErrorMap(ex -> new BillingCreationException(ex.getMessage()))
+                .doOnError(ex -> log.error("Error save", ex));
     }
 
     @Override

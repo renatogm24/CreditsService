@@ -2,7 +2,6 @@ package com.group7.creditsservice.controller;
 
 import com.group7.creditsservice.dto.MovementRequest;
 import com.group7.creditsservice.dto.MovementResponse;
-import com.group7.creditsservice.model.MovementLoan;
 import com.group7.creditsservice.service.MovementLoanService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,7 @@ public class MovementLoanController {
     private MovementLoanService service;
 
     @GetMapping
-    public Flux<MovementLoan> getAllMovements() {
+    public Flux<MovementResponse> getAllMovements() {
         return service.getAll();
     }
 
@@ -38,7 +37,7 @@ public class MovementLoanController {
     }
 
     @GetMapping("{id}")
-    public Mono<MovementLoan> getMovement(@PathVariable String id) {
+    public Mono<MovementResponse> getMovement(@PathVariable String id) {
         return service.getById(id);
     }
 

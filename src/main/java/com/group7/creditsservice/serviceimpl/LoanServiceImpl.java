@@ -2,6 +2,8 @@ package com.group7.creditsservice.serviceimpl;
 
 import com.group7.creditsservice.dto.LoanRequest;
 import com.group7.creditsservice.dto.LoanResponse;
+import com.group7.creditsservice.exception.billing.BillingCreationException;
+import com.group7.creditsservice.exception.credit.CreditCreationException;
 import com.group7.creditsservice.exception.credit.CreditNotFoundException;
 import com.group7.creditsservice.model.Loan;
 import com.group7.creditsservice.repository.LoanRepository;
@@ -19,8 +21,8 @@ public class LoanServiceImpl implements LoanService {
     private LoanRepository repository;
 
     @Override
-    public Flux<Loan> findAllLoans() {
-        return repository.findAll();
+    public Flux<LoanResponse> findAllLoans() {
+        return repository.findAll().map(LoanResponse::fromModel);
     }
 
     @Override
@@ -33,15 +35,19 @@ public class LoanServiceImpl implements LoanService {
     public Mono<LoanResponse> saveLoan(Mono<LoanRequest> loanRequest) {
         return loanRequest.map(LoanRequest::toModel)
                 .flatMap(repository::insert)
-                .map(LoanResponse::fromModel);
+                .map(LoanResponse::fromModel)
+                .onErrorMap(ex -> new CreditCreationException(ex.getMessage()));
     }
 
     @Override
-    public Mono<LoanResponse> update(String id, Mono<LoanRequest> loanRequest) {
+    public Mono<LoanResponse> update(String id, LoanRequest loanRequest) {
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new CreditNotFoundException("Loan not found with id:"+id)))
                 .doOnError(ex -> log.error("Loan not found with id: {}", id, ex))
-                .flatMap(loan -> loanRequest.map(LoanRequest::toModel))
+                .flatMap(loan -> {
+                    loan.setPaymentDay(loanRequest.getPaymentDay());
+                    return repository.save(loan);
+                })
                 .map(LoanResponse::fromModel)
                 .doOnSuccess(res -> log.info("Updated loan with ID:", res.getId()));
     }

@@ -2,7 +2,6 @@ package com.group7.creditsservice.controller;
 
 import com.group7.creditsservice.dto.LoanRequest;
 import com.group7.creditsservice.dto.LoanResponse;
-import com.group7.creditsservice.model.Loan;
 import com.group7.creditsservice.service.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,7 @@ public class LoanController {
     private LoanService service;
 
     @GetMapping
-    public Flux<Loan> getLoans() {
+    public Flux<LoanResponse> getLoans() {
         return service.findAllLoans();
     }
 
@@ -36,7 +35,7 @@ public class LoanController {
     }
 
     @PutMapping("{id}")
-    public Mono<LoanResponse> updateLoan(@PathVariable String id, @Valid @RequestBody Mono<LoanRequest> loanRequest) {
+    public Mono<LoanResponse> updateLoan(@PathVariable String id, @Valid @RequestBody LoanRequest loanRequest) {
         return service.update(id, loanRequest);
     }
 

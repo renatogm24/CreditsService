@@ -2,7 +2,7 @@ package com.group7.creditsservice.serviceimpl;
 
 import com.group7.creditsservice.dto.MovementRequest;
 import com.group7.creditsservice.dto.MovementResponse;
-import com.group7.creditsservice.model.MovementLoan;
+import com.group7.creditsservice.exception.movement.MovementNotFoundException;
 import com.group7.creditsservice.exception.movement.MovementCreationException;
 import com.group7.creditsservice.repository.LoanRepository;
 import com.group7.creditsservice.repository.MovementLoanRepository;
@@ -26,14 +26,15 @@ public class MovementLoanServiceImpl implements MovementLoanService {
     private MovementLoanRepository movementLoanRepository;
 
     @Override
-    public Flux<MovementLoan> getAll() {
-        return movementLoanRepository.findAll();
+    public Flux<MovementResponse> getAll() {
+        return movementLoanRepository.findAll().map(MovementResponse::fromModelMovementLoan);
     }
 
     @Override
-    public Mono<MovementLoan> getById(String id) {
+    public Mono<MovementResponse> getById(String id) {
         return movementLoanRepository.findById(id)
-                .switchIfEmpty(Mono.error(new MovementCreationException("Movement not found with id:"+id)));
+                .switchIfEmpty(Mono.error(new MovementNotFoundException("Movement not found with id:"+id)))
+                .map(MovementResponse::fromModelMovementLoan);
     }
 
     @Override
@@ -48,6 +49,7 @@ public class MovementLoanServiceImpl implements MovementLoanService {
         LocalDate last = currentMonth.atEndOfMonth();
 
         return movementLoanRepository.findByLoanAndDateBetween(loan,firstOfMonth, last)
+                .switchIfEmpty(Flux.empty())
                 .reduce(0.0, (x, y)->x+y.getAmountSigned());
     }
 
@@ -80,16 +82,5 @@ public class MovementLoanServiceImpl implements MovementLoanService {
                         }))
                 .map(MovementResponse::fromModelMovementLoan)
                 .onErrorMap(ex -> new MovementCreationException(ex.getMessage()));
-    }
-
-    @Override
-    public Mono<MovementLoan> update(String id, MovementLoan movementRequest) {
-        return movementLoanRepository.findById(id)
-                .switchIfEmpty(Mono.error(new MovementCreationException("Loan not found with id:"+id)))
-                .flatMap(existingLoan -> {
-                    existingLoan.setDate(movementRequest.getDate());
-                    return movementLoanRepository.save(existingLoan);
-                })
-                .doOnSuccess(res -> log.info("Updated movement with ID: {}", res.getId()));
     }
 }

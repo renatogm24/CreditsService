@@ -2,14 +2,13 @@ package com.group7.creditsservice.service;
 
 import com.group7.creditsservice.dto.MovementRequest;
 import com.group7.creditsservice.dto.MovementResponse;
-import com.group7.creditsservice.model.MovementLoan;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface MovementLoanService {
-    Flux<MovementLoan> getAll();
+    Flux<MovementResponse> getAll();
 
-    Mono<MovementLoan> getById(String id);
+    Mono<MovementResponse> getById(String id);
 
     Flux<MovementResponse> getAllMovementsByLoan(String loan);
 
@@ -20,7 +19,5 @@ public interface MovementLoanService {
     Mono<Void> deleteAll();
 
     Mono<MovementResponse> save(MovementRequest movementRequest);
-
-    Mono<MovementLoan> update(String id, MovementLoan movementLoan);
 
 }
