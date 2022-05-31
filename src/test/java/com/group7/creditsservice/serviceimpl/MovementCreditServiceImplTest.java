@@ -167,14 +167,9 @@ class MovementCreditServiceImplTest {
     }
 
     @Test
-    void getAllReportsByClient() {
-
-        YearMonth currentMonth = YearMonth.now();
-        LocalDate firstOfMonth = currentMonth.atDay(1);
-        LocalDate last = currentMonth.atEndOfMonth();
-
+    void save() {
         CreditCard creditCard = CreditCard.builder()
-                .id(CREDIT_CARD_ID)
+                .id(MOVEMENT_CREDIT_CARD_ID)
                 .number(CREDIT_CARD_NUMBER)
                 .billingDay(CREDIT_CARD_BILLING_DAY)
                 .client(CREDIT_CARD_CLIENT)
@@ -183,12 +178,6 @@ class MovementCreditServiceImplTest {
                 .tcea(CREDIT_CARD_TCEA)
                 .balance(CREDIT_CARD_BALANCE)
                 .build();
-
-        when(creditCardRepository.findById(CREDIT_CARD_ID))
-                .thenReturn(Mono.just(creditCard));
-
-        when(creditCardRepository.findCreditCardsByClient(CREDIT_CARD_CLIENT))
-                .thenReturn(Flux.just(creditCard));
 
         MovementCreditCard movementCreditCard = MovementCreditCard.builder()
                 .id(MOVEMENT_CREDIT_CARD_ID)
@@ -199,12 +188,25 @@ class MovementCreditServiceImplTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        when(movementCreditCardRepository.findByCreditAndDateBetween(CREDIT_CARD_ID, firstOfMonth, last))
-                .thenReturn(Flux.just(movementCreditCard));
+        MovementRequest movementRequest = MovementRequest.builder()
+                .type(MOVEMENT_CREDIT_CARD_ID)
+                .credit(CREDIT_CARD_ID)
+                .amount(MOVEMENT_CREDIT_CARD_AMOUNT)
+                .build();
 
-        StepVerifier.create(movementCreditCardService.getAllReportsByClient(CREDIT_CARD_CLIENT))
-                .expectNextCount(1)
+        when(creditCardRepository.findById(CREDIT_CARD_ID))
+                .thenReturn(Mono.just(creditCard));
+
+        when(creditCardRepository.save(creditCard))
+                .thenReturn(Mono.just(creditCard));
+
+        when(movementCreditCardRepository.insert(movementCreditCard))
+                .thenReturn(Mono.just(movementCreditCard));
+
+        StepVerifier.create(movementCreditCardService.save(movementCreditCard))
+                .expectNext(MovementResponse.fromModelMovementCreditCard(movementCreditCard))
                 .verifyComplete();
+
     }
 
     @Test

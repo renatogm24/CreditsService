@@ -99,8 +99,12 @@ public class MovementCreditCardServiceImpl implements MovementCreditCardService 
     @Override
     public Flux<Map<String, Double>> getAllReportsByClient(String client) {
         return creditCardRepository.findCreditCardsByClient(client)
-                .flatMap(creditCard -> getAverageDailyBalance(creditCard.getId())
-                        .map(result -> Collections.singletonMap(creditCard.getId(), result)));
+                .flatMap(creditCard -> {
+                    log.info("creditCard.getId()"+ creditCard.getId());
+                    return getAverageDailyBalance(creditCard.getId())
+                            .map(result -> Collections.singletonMap(creditCard.getId(), result));
+                });
+
     }
 
     @Override
@@ -113,21 +117,21 @@ public class MovementCreditCardServiceImpl implements MovementCreditCardService 
                                 return Mono.error(new MovementCreationException("You reach the limit of your credit card"));
                             existingCredit.makeMovement(movement.getType(), movement.getAmount());
 
+                            if(movement.getType().equalsIgnoreCase("deposit")) {
+                                billingCreditCardRepository.findByCreditAndActiveIsTrue(movement.getCredit())
+                                        .flatMap(billingCreditCard -> {
+                                            billingCreditCard.updatePayment(movement.getAmount());
+                                            return creditCardRepository.save(existingCredit)
+                                                    .then(billingCreditCardRepository.save(billingCreditCard))
+                                                    .then(movementRepository.insert(movement));
+                                        })
+                                        .subscribe();
+                            }
+
                             return creditCardRepository.save(existingCredit)
-                                    .then(movementRepository.insert(movement));
+                                        .then(movementRepository.insert(movement));
 
                         })
-                        .flatMap(movement2 -> billingCreditCardRepository.findByCreditAndActiveIsTrue(movement2.getCredit())
-                                .flatMap(billingCreditCard -> {
-                                    if(movement2.getType().equalsIgnoreCase("deposit")) {
-                                        billingCreditCard.updatePayment(movement2.getAmount());
-                                        return billingCreditCardRepository.save(billingCreditCard);
-                                    }
-
-                                    return Mono.just(movement2);
-                                })
-                                .then(movementRepository.findById(movement.getId())))
-
                 )
                 .map(MovementResponse::fromModelMovementCreditCard)
                 .onErrorMap(ex -> new MovementCreationException(ex.getMessage()))

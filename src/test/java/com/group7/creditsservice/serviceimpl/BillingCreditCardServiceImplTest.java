@@ -62,6 +62,7 @@ class BillingCreditCardServiceImplTest {
                 .verifyComplete();
     }
 
+
     @Test
     void isDebt() {
         when(billingCreditCardRepository.existsByClientAndMinPaymentGreaterThanAndLastDayPaymentLessThan(CREDIT_CARD_CLIENT, 0, LocalDate.now()))
